@@ -1,3 +1,4 @@
+"""Module providing a emotion detection server"""
 from flask import Flask, render_template, request
 from EmotionDetection.emotion_detection import emotion_detector
 
@@ -5,6 +6,7 @@ app = Flask("Emotion Detector")
 
 @app.route("/emotionDetector")
 def emot_detector():
+    """Function to pass text to emotion detector and return response"""
     text_to_analyse = request.args.get('textToAnalyze')
 
     response = emotion_detector(text_to_analyse)
@@ -16,6 +18,9 @@ def emot_detector():
     sadness = response['sadness']
     dominant_emotion = response['dominant_emotion']
 
+    if dominant_emotion is None:
+        return "Invalid text! Please try again!"
+
     return (
         f"For the given statement, the system response is 'anger': {anger}, "
         f"'disgust': {disgust}, 'fear': {fear}, 'joy': {joy} and 'sadness': {sadness}. "
@@ -24,6 +29,7 @@ def emot_detector():
 
 @app.route("/")
 def render_index_page():
+    """Function to render index page"""
     return render_template('index.html')
 
 if __name__ == "__main__":
